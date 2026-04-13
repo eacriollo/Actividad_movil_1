@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -37,10 +39,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PantallaInicial (){
+    //pantalla inical de la aplicación
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = "Actividad 1",
@@ -52,17 +56,31 @@ fun PantallaInicial (){
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Button(
-            onClick = {}
-        ) {
-            Text(text = "Ingresar a Mundo Pokemon")
-        }
+        BotonCategoria(
+            text = "Ver Mundo Pokemon",
+            onClick = {  }
+        )
+        BotonCategoria(
+            text = "Ver Mundo Dragon Ball",
+            onClick = {  }
+        )
 
-        Button(
-            onClick = {}
-        ) {
-            Text(text = "Ingresar a Mundo DragonBall")
-        }
 
     }
 }
+
+@Composable
+fun BotonCategoria(
+    text: String,
+    onClick: () -> Unit,
+
+){
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+
+    ) {
+        Text(text = text)
+    }
+}
+
