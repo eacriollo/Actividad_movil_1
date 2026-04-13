@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.actividad1.uipantallas.PantallaDetalle
-import com.example.actividad1.uipantallas.PantallaInicial
-import com.example.actividad1.uipantallas.PantallaListado
+
 
 @Composable
 fun AppNavegacion() {
@@ -14,27 +12,27 @@ fun AppNavegacion() {
 
     NavHost(
         navController = navController,
-        startDestination = "inicio"
+        startDestination = Rutas.INICIO
     ) {
-        composable("inicio") {
+        composable(Rutas.INICIO) {
             PantallaInicial(
                 irAListado = { categoria ->
-                    navController.navigate("listado/$categoria")
+                    navController.navigate(Rutas.listado(categoria))
                 }
             )
         }
 
-        composable("listado/{categoria}") { backStackEntry ->
+        composable(Rutas.LISTADO) { backStackEntry ->
             val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
             // Aquí puedes manejar la categoría seleccionada y mostrar el contenido correspondiente
             PantallaListado(
                 categoria = categoria,
                 irADetalle = { nombre ->
-                    navController.navigate("detalle/$categoria/$nombre")
+                    navController.navigate(Rutas.detalle(categoria, nombre))
                 }
             )
         }
-        composable("detalle/{categoria}/{nombre}") { backStackEntry ->
+        composable(Rutas.DETALLE) { backStackEntry ->
             val categoria = backStackEntry.arguments?.getString("categoria") ?: ""
             val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
             //manejar la categoría seleccionada y mostrar el contenido correspondiente
