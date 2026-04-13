@@ -13,14 +13,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.actividad1.model.Personaje
-
-
+import com.example.actividad1.network.RetrofitInstance
+import com.example.actividad1.network.DragonBallRetrofitInstance
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.setValue
 
 
 @Composable
@@ -82,20 +87,30 @@ fun PantallaListado(
     categoria: String,
     irADetalle: (String) -> Unit
 ) {
-    val personajes = if (categoria == "pokemon") {
-        listOf(
-            Personaje("Pikachu", "Pokemon eléctrico muy popular"),
-            Personaje("Charmander", "Pokemon de tipo fuego"),
-            Personaje("Bulbasaur", "Pokemon de tipo planta"),
-            Personaje("Squirtle", "Pokemon de tipo agua")
-        )
-    } else {
-        listOf(
-            Personaje("Goku", "Guerrero saiyajin y protagonista"),
-            Personaje("Vegeta", "Príncipe de los saiyajin"),
-            Personaje("Piccolo", "Guerrero namekiano"),
-            Personaje("Gohan", "Hijo de Goku")
-        )
+    var personajes by remember { mutableStateOf(listOf<Personaje>()) }
+
+    LaunchedEffect(categoria) {
+        try {
+            if (categoria == "pokemon") {
+                val respuesta = RetrofitInstance.api.obtenerPokemons()
+                personajes = respuesta.results.map { pokemon ->
+                    Personaje(
+                        nombre = pokemon.name,
+                        descripcion = "Pokemon obtenido desde la API"
+                    )
+                }
+            } else if (categoria == "dragonball") {
+                val respuesta = DragonBallRetrofitInstance.api.obtenerPersonajes()
+                personajes = respuesta.items.map { personaje ->
+                    Personaje(
+                        nombre = personaje.name,
+                        descripcion = personaje.description ?: "Sin descripción"
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     Column(
