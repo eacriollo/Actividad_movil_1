@@ -26,6 +26,17 @@ import com.example.actividad1.network.RetrofitInstance
 import com.example.actividad1.network.DragonBallRetrofitInstance
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.setValue
+import com.example.actividad1.viewmodel.CharacterListViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import coil.compose.AsyncImage
 
 
 @Composable
@@ -82,35 +93,22 @@ fun BotonCategoria(
     }
 }
 
+
 @Composable
 fun PantallaListado(
     categoria: String,
-    irADetalle: (String) -> Unit
+    irADetalle: (String) -> Unit,
+    viewModel: CharacterListViewModel = viewModel()
 ) {
-    var personajes by remember { mutableStateOf(listOf<Personaje>()) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var textoBusqueda by remember { mutableStateOf("") }
 
     LaunchedEffect(categoria) {
-        try {
-            if (categoria == "pokemon") {
-                val respuesta = RetrofitInstance.api.obtenerPokemons()
-                personajes = respuesta.results.map { pokemon ->
-                    Personaje(
-                        nombre = pokemon.name,
-                        descripcion = "Pokemon obtenido desde la API"
-                    )
-                }
-            } else if (categoria == "dragonball") {
-                val respuesta = DragonBallRetrofitInstance.api.obtenerPersonajes()
-                personajes = respuesta.items.map { personaje ->
-                    Personaje(
-                        nombre = personaje.name,
-                        descripcion = personaje.description ?: "Sin descripción"
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        viewModel.cargarPersonajes(categoria)
+    }
+
+    val personajesFiltrados = uiState.personajes.filter { personaje ->
+        personaje.nombre.contains(textoBusqueda, ignoreCase = true)
     }
 
     Column(
@@ -129,21 +127,40 @@ fun PantallaListado(
             style = MaterialTheme.typography.bodyLarge
         )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(personajes) { personaje ->
-                TarjetaPersonaje(
-                    personaje = personaje,
-                    onClick = {
-                        irADetalle(personaje.nombre)
+        OutlinedTextField(
+            value = textoBusqueda,
+            onValueChange = { textoBusqueda = it },
+            label = { Text("Buscar personaje") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        when {
+            uiState.isLoading -> {
+                Text(text = "Cargando personajes...")
+            }
+
+            uiState.errorMessage != null -> {
+                Text(text = uiState.errorMessage!!)
+            }
+
+            else -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(personajesFiltrados) { personaje ->
+                        TarjetaPersonaje(
+                            personaje = personaje,
+                            onClick = {
+                                SelectedCharacterStore.personajeSeleccionado = personaje
+                                irADetalle(personaje.nombre)
+                            }
+                        )
                     }
-                )
+                }
             }
         }
     }
 }
-
 @Composable
 fun TarjetaPersonaje(
     personaje: Personaje,
@@ -158,6 +175,11 @@ fun TarjetaPersonaje(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            AsyncImage(
+                model = personaje.imagen,
+                contentDescription = personaje.nombre,
+                modifier = Modifier.fillMaxWidth()
+            )
             Text(
                 text = personaje.nombre,
                 style = MaterialTheme.typography.headlineSmall
@@ -176,23 +198,7 @@ fun PantallaDetalle(
     categoria: String,
     nombre: String
 ) {
-    val descripcion = if (categoria == "pokemon") {
-        when (nombre) {
-            "Pikachu" -> "Pokemon eléctrico muy popular"
-            "Charmander" -> "Pokemon de tipo fuego"
-            "Bulbasaur" -> "Pokemon de tipo planta"
-            "Squirtle" -> "Pokemon de tipo agua"
-            else -> "Sin descripción"
-        }
-    } else {
-        when (nombre) {
-            "Goku" -> "Guerrero saiyajin y protagonista"
-            "Vegeta" -> "Príncipe de los saiyajin"
-            "Piccolo" -> "Guerrero namekiano"
-            "Gohan" -> "Hijo de Goku"
-            else -> "Sin descripción"
-        }
-    }
+    val personaje = SelectedCharacterStore.personajeSeleccionado
 
     Column(
         modifier = Modifier
@@ -203,6 +209,12 @@ fun PantallaDetalle(
         Text(
             text = "Detalle del personaje",
             style = MaterialTheme.typography.headlineMedium
+        )
+
+        AsyncImage(
+            model = personaje?.imagen,
+            contentDescription = nombre,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(
@@ -216,7 +228,7 @@ fun PantallaDetalle(
         )
 
         Text(
-            text = "Descripción: $descripcion",
+            text = "Descripción: ${personaje?.descripcion ?: "Sin descripción"}",
             style = MaterialTheme.typography.bodyLarge
         )
     }
