@@ -12,12 +12,15 @@ import kotlinx.coroutines.launch
 
 
 data class CharacterListUiState(
+
+    // clase para el estado de la lista de personajes
     val isLoading: Boolean = false,
     val personajes: List<Personaje> = emptyList(),
     val errorMessage: String? = null
 )
 class CharacterListViewModel : ViewModel() {
 
+    // clase para el viewmodel de la lista de personajes
     private val pokemonRepository = PokemonRepository()
     private val dragonBallRepository = DragonBallRepository()
 

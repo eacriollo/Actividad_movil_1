@@ -29,6 +29,9 @@ fun AppNavegacion() {
                 categoria = categoria,
                 irADetalle = { nombre ->
                     navController.navigate(Rutas.detalle(categoria, nombre))
+                },
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -38,7 +41,10 @@ fun AppNavegacion() {
             //manejar la categoría seleccionada y mostrar el contenido correspondiente
             PantallaDetalle(
                 categoria = categoria,
-                nombre = nombre
+                nombre = nombre,
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
     }

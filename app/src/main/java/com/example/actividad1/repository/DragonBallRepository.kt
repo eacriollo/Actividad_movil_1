@@ -5,6 +5,7 @@ import com.example.actividad1.network.DragonBallRetrofitInstance
 
 class DragonBallRepository {
 
+    // Obtener los personajes de Dragon Ball desde la API
     suspend fun obtenerPersonajes(): List<Personaje> {
         val respuesta = DragonBallRetrofitInstance.api.obtenerPersonajes()
 

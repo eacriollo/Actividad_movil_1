@@ -5,6 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
+    // Base URL for the PokeAPI
     private const val BASE_URL = "https://pokeapi.co/api/v2/"
 
     val api: PokeApiService by lazy {

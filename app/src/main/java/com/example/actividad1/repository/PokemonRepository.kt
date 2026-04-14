@@ -5,6 +5,7 @@ import com.example.actividad1.network.RetrofitInstance
 
 class PokemonRepository {
 
+    // Función para obtener los Pokémon desde la API
     suspend fun obtenerPokemons(): List<Personaje> {
         val respuesta = RetrofitInstance.api.obtenerPokemons()
 

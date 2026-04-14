@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.actividad1.uipantallas
 
 import androidx.compose.foundation.clickable
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +40,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import coil.compose.AsyncImage
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Text
+
+
 
 
 @Composable
@@ -94,10 +103,13 @@ fun BotonCategoria(
 }
 
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaListado(
     categoria: String,
     irADetalle: (String) -> Unit,
+    onBack: () -> Unit,
     viewModel: CharacterListViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -111,50 +123,56 @@ fun PantallaListado(
         personaje.nombre.contains(textoBusqueda, ignoreCase = true)
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = "Pantalla de listado",
-            style = MaterialTheme.typography.headlineMedium
-        )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Listado de $categoria")
+                },
+                navigationIcon = {
+                    TextButton(onClick = onBack) {
+                        Text("Volver")
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedTextField(
+                value = textoBusqueda,
+                onValueChange = { textoBusqueda = it },
+                label = { Text("Buscar personaje") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Text(
-            text = "Categoría seleccionada: $categoria",
-            style = MaterialTheme.typography.bodyLarge
-        )
+            when {
+                uiState.isLoading -> {
+                    Text(text = "Cargando personajes...")
+                }
 
-        OutlinedTextField(
-            value = textoBusqueda,
-            onValueChange = { textoBusqueda = it },
-            label = { Text("Buscar personaje") },
-            modifier = Modifier.fillMaxWidth()
-        )
+                uiState.errorMessage != null -> {
+                    Text(text = uiState.errorMessage!!)
+                }
 
-        when {
-            uiState.isLoading -> {
-                Text(text = "Cargando personajes...")
-            }
-
-            uiState.errorMessage != null -> {
-                Text(text = uiState.errorMessage!!)
-            }
-
-            else -> {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(personajesFiltrados) { personaje ->
-                        TarjetaPersonaje(
-                            personaje = personaje,
-                            onClick = {
-                                SelectedCharacterStore.personajeSeleccionado = personaje
-                                irADetalle(personaje.nombre)
-                            }
-                        )
+                else -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(personajesFiltrados) { personaje ->
+                            TarjetaPersonaje(
+                                personaje = personaje,
+                                onClick = {
+                                    SelectedCharacterStore.personajeSeleccionado = personaje
+                                    irADetalle(personaje.nombre)
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -168,7 +186,7 @@ fun TarjetaPersonaje(
 ){
     Card(
         modifier = Modifier
-            .padding(16.dp)
+            .fillMaxWidth()
             .clickable { onClick() }
 
     ){
@@ -196,40 +214,57 @@ fun TarjetaPersonaje(
 @Composable
 fun PantallaDetalle(
     categoria: String,
-    nombre: String
+    nombre: String,
+    onBack: () -> Unit
 ) {
     val personaje = SelectedCharacterStore.personajeSeleccionado
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            text = "Detalle del personaje",
-            style = MaterialTheme.typography.headlineMedium
-        )
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Detalle")
+                },
+                navigationIcon = {
+                    TextButton(onClick = onBack) {
+                        Text("Volver")
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "Detalle del personaje",
+                style = MaterialTheme.typography.headlineMedium
+            )
 
-        AsyncImage(
-            model = personaje?.imagen,
-            contentDescription = nombre,
-            modifier = Modifier.fillMaxWidth()
-        )
+            AsyncImage(
+                model = personaje?.imagen,
+                contentDescription = nombre,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Text(
-            text = "Nombre: $nombre",
-            style = MaterialTheme.typography.bodyLarge
-        )
+            Text(
+                text = "Nombre: $nombre",
+                style = MaterialTheme.typography.bodyLarge
+            )
 
-        Text(
-            text = "Categoría: $categoria",
-            style = MaterialTheme.typography.bodyLarge
-        )
+            Text(
+                text = "Categoría: $categoria",
+                style = MaterialTheme.typography.bodyLarge
+            )
 
-        Text(
-            text = "Descripción: ${personaje?.descripcion ?: "Sin descripción"}",
-            style = MaterialTheme.typography.bodyLarge
-        )
+            Text(
+                text = "Descripción: ${personaje?.descripcion ?: "Sin descripción"}",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }

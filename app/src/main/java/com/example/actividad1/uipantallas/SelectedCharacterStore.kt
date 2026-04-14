@@ -4,5 +4,7 @@ import com.example.actividad1.model.Personaje
 
 
 object SelectedCharacterStore {
-    var personajeSeleccionado: Personaje? = null;
+
+    // Variable para almacenar el personaje seleccionado
+   var personajeSeleccionado: Personaje? = null;
 }
