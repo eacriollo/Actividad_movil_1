@@ -18,6 +18,8 @@ data class CharacterListUiState(
     val personajes: List<Personaje> = emptyList(),
     val errorMessage: String? = null
 )
+
+// ViewModel encargado de cargar y exponer personajes para la pantalla de listado.
 class CharacterListViewModel : ViewModel() {
 
     // clase para el viewmodel de la lista de personajes
