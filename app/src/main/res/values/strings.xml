@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">actividad1</string>
+    <string name="titulo_inicio">Proyecto API Anime</string>
+    <string name="descripcion_inicio">Selecciona una categoría para ver personajes y sus detalles</string>
+    <string name="ver_pokemon">Ver Pokemon</string>
+    <string name="ver_dragonball">Ver Dragon Ball</string>
+    <string name="volver">Volver</string>
+    <string name="buscar_personaje">Buscar personaje</string>
+    <string name="cargando_personajes">Cargando personajes...</string>
+    <string name="detalle_personaje">Detalle del personaje</string>
+
 </resources>
