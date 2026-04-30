@@ -28,6 +28,7 @@ import coil.compose.AsyncImage
 import androidx.compose.ui.draw.clip
 
 
+// Composable para la tarjeta de un personaje se reutilizará en los diferentes personajes
 @Composable
 fun TarjetaPersonaje(
     personaje: Personaje,

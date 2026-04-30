@@ -26,6 +26,8 @@ import androidx.compose.foundation.verticalScroll
 
 import androidx.compose.ui.res.stringResource
 import com.example.actividad1.R
+
+// Composable para la pantalla de detalle de un personaje
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaDetalle(

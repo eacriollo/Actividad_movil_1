@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.actividad1.R
 
 
-//pantalla inicial de la aplicación donde se selecciona el anime a ver
+// Composable para la pantalla inicial de la aplicación
 @Composable
 fun PantallaInicial (
     irAListado: (String) -> Unit,

@@ -3,6 +3,7 @@ package com.example.actividad1.network
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// Interfaz para la API de Pokemon
 interface PokeApiService{
 
     // Funciones para obtener los pokemons de la API de pokemon
@@ -13,10 +14,12 @@ interface PokeApiService{
 
 }
 
+// Modelo de datos para la respuesta de la API de Pokemon
 data class PokemonListResponse(
     val results: List<PokemonResult>
 )
 
+// Modelo de datos para un pokemon
 data class PokemonResult(
     val name: String,
     val url: String

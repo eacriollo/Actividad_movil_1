@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// Estado de la pantalla de detalle.
+// Clase de estado para la pantalla de detalle del personaje
 data class CharacterDetailUiState(
     val personaje: Personaje? = null
 )

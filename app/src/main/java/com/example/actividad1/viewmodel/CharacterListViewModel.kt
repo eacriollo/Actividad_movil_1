@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
+// Clase de estado para la lista de personajes
 data class CharacterListUiState(
 
     // clase para el estado de la lista de personajes

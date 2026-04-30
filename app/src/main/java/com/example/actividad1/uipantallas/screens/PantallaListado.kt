@@ -33,7 +33,7 @@ import com.example.actividad1.uipantallas.components.BotonCategoria
 import com.example.actividad1.uipantallas.components.TarjetaPersonaje
 import com.example.actividad1.viewmodel.CharacterListViewModel
 
-
+// Composable para la pantalla de listado de personajes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaListado(

@@ -9,6 +9,7 @@ import com.example.actividad1.uipantallas.screens.PantallaInicial
 import com.example.actividad1.uipantallas.screens.PantallaListado
 
 
+// Navegación de la aplicación utilizando NavDisplay
 @Composable
 fun AppNavegacion() {
     val backStack = rememberNavBackStack(Inicio)

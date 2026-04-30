@@ -2,10 +2,10 @@ package com.example.actividad1.repository
 
 import com.example.actividad1.model.Personaje
 import com.example.actividad1.network.RetrofitInstance
-
+// Repositorio para obtener los Pokémon desde la API
 class PokemonRepository {
 
-    // Función para obtener los Pokémon desde la API
+
     suspend fun obtenerPokemons(): List<Personaje> {
         val respuesta = RetrofitInstance.api.obtenerPokemons()
 

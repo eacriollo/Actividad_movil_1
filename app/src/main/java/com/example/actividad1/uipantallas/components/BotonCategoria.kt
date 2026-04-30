@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+// Composable para el botón de categoría que se reutilizará para el ingreso a las diferentes pantallas
 @Composable
 fun BotonCategoria(
     texto: String,

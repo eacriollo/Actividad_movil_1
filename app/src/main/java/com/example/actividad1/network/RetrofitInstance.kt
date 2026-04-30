@@ -3,6 +3,7 @@ package com.example.actividad1.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// Instancia de Retrofit para la API de Pokemon
 object RetrofitInstance {
 
     // Base URL for the PokeAPI
